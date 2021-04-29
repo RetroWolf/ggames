@@ -1,115 +1,105 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<title>BGames</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-* {
-  box-sizing: border-box;
-}
+<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1 width="1000" height="562"></canvas>
+<span id="logmsg" style="font-size:18px;font-family:'Source Sans Pro', sans-serif;color:#F67;text-shadow:1px 1px 5px rgba(0,0,0,.5);font-weight:bold;text-align:center;"></span>
+</div>
+</div>
+<script type='text/javascript'>
+      function logText(text) { 
+        console.log(text);
+        var logElement = document.getElementById('logmsg');
+        logElement.innerHTML = text;
+      }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
+      // ensure game still runs even without IndexedDB
+      var idb = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+      if (!idb) { alert('IndexedDB unsupported, therefore\nmaps and settings will not save');window.mozIndexedDB = {}; }
 
-header {
-  background-color: DarkBlue;
-  padding: 30px;
-  text-align: center;
-  font-size: 35px;
-  color: white;
-}
-
-nav {
-  float: left;
-  width: 100%;
-  background: Turquoise;
-  padding: 20px;
-  text-align: center;
-}
-  figcaption {
-  color: Black;
-  padding: 2px;
-  text-align: center;
-}
-
-nav ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-article {
-  float: left;
-  padding: 0px;
-  width: 100%;
-  background-color: DeepSkyBlue;
-  text-align: center;
-  color: white;
-
-}
-
-section::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-footer {
-  background-color: DodgerBlue;
-  padding: 10px;
-  text-align: center;
-  color: white;
-}
-
-@media (max-width: 600px) {
-  nav, article {
-    width: 100%;
-    height: auto;
-  }
-}
-</style>
-</head>
-<body>
-
-
-<header>
-  <h2>BGames</h2>
-</header>
-<footer>
-  <p><a href="Shooter.html">Shooter</a>
-    <a href="IO.html">.IO</a>
-    <a href="car.html">FirstPerson</a>
-    <a href="3D.html">3D</a>
-    <a href="2D.html">2D</a></p>
-</footer>
-<section>
-  
-  
-  <article>
-    <h1 style="text-aline:center;"> Browser game libary</h1>
-<p>Scroll down to find the game you want. If you dont find the game you are looking for clcik  <a href="request.html">here</a> to request it.(Note: we can not run flash games.</p>
-  </article>
-</section>
-<nav>
-    <ul>
-    <p>
-      <a href="survivio.html"><img src="survivio.png
-" alt="surviv.io" style="width:100px;height:100px;"></a>
+      // need to load IndexedDB before running the game
+      function preloadIndexedDB() {
+        addRunDependency('load-idb');
+        FS.mkdir('/classicube');
+        FS.mount(IDBFS, {}, '/classicube');
+        FS.syncfs(true, function(err) { 
+            if (err) window.cc_idbErr = err;
+            removeRunDependency('load-idb');
+        })
+      }
       
-      <a href="tameingio.html"><img src="tameingio.png
-" alt="tameing.io" style="width:100px;height:100px;"></a>
-   
-      <a href="paperio2.html"><img src="paperio2.png
-" alt="paperio2.io" style="width:100px;height:100px;"></a>
- 
-      <a href="betrayal.html"><img src="betrayalio.png
-" alt="betrayal.io" style="width:100px;height:100px;"></a>
+      function forceTouchLayout() {
+        var elem;
+        try {
+          elem = document.getElementById('footer');
+          elem.parentNode.removeChild(elem);
+          elem = document.getElementById('content');
+          elem.parentNode.removeChild(elem);
+        } catch (err) { }
+      }
       
-            <a href="madalin_stunt_cars_2.html"><img src="madalin2.png
-" alt="Madalin cars 2" style="width:100px;height:100px;"</a></p>
-    </ul>
-  </nav>
+      function getCssInt(styles, prop) { return parseInt(styles.getPropertyValue(prop), 10); }
+      function calcViewportWidth(elem) {
+        var parent = elem.parentNode;
+        var styles = window.getComputedStyle(parent, null);
+        return parent.offsetWidth - getCssInt(styles, 'padding-left') - getCssInt(styles, 'padding-right');
+      }
 
-</body>
-</html>
+      function resizeGameCanvas() {
+        var cc_canv = document.getElementById('canvas');
+        var dpi = window.devicePixelRatio;
+        var aspect_ratio = 16/9;
+
+        var viewport_w = calcViewportWidth(cc_canv);
+        var viewport_h = viewport_w / aspect_ratio;
+
+        var canv_w = Math.round(viewport_w);
+        var canv_h = Math.round(viewport_h);
+
+        if (canv_h % 2) { canv_h = canv_h - 1; }
+        if (canv_w % 2) { canv_w = canv_w - 1; }
+
+
+        cc_canv.width  = canv_w * dpi;
+        cc_canv.height = canv_h * dpi;
+      }
+      
+      var Module = {
+        preRun: [ preloadIndexedDB, resizeGameCanvas ],
+        postRun: [],
+        arguments: ['RetroWolf'],
+        print: function(text) {
+            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            console.log(text);
+        },
+        printErr: function(text) {
+          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+          console.error(text);
+        },
+        canvas: (function() {
+          return document.getElementById('canvas');
+        })(),
+        setStatus: logText,
+        totalDependencies: 0,
+        monitorRunDependencies: function(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+        }
+      };
+
+      Module.setStatus('Downloading...');
+      window.onerror = function(event) {
+        Module.setStatus('Exception thrown, see JavaScript console (' + event + ')');
+        Module.setStatus = function(text) {
+          if (text) Module.printErr('[post-exception status] ' + text);
+        };
+      };
+
+      function onDownloadFailed(src) {
+        // retry without CORS
+        logText('Failed to download ClassiCube.js, retrying..');
+        var root = src.parentNode;
+        root.removeChild(src);
+
+        var elem = document.createElement('script');
+        elem.setAttribute('async', '');
+        elem.setAttribute('src', '//classicube.s3.amazonaws.com/client/latest/ClassiCube.js?v=14');
+        root.appendChild(elem);
+    }
+    </script>
