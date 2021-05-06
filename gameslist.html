@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  padding: 1%;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+{
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial;
+  font-size: 17px;
+}
+
+.container {
+  position: relative;
+  max-width: 200px;
+  width: 200px;
+  border-radius: 100%;
+}
+
+
+
+.container .content {
+  position: absolute;
+  border-radius: 0;
+  bottom: 3%;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+  color: #f1f1f1;
+  width: 100%;
+  hight: 20px;
+}
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="column">
+    <div class="container">
+  <a href="https://www.w3schools.com/howto/default.asp"><img src="/w3images/notebook.jpg" alt="Notebook" style="width:200px;">
+  <div class="content">
+    <p>Surviv.io</p>
+  </div>
+</div></a>
+  </div>
+  <div class="row">
+  <div class="column">
+    <div class="container">
+  <a href="default.asp"><img src="/w3images/notebook.jpg" alt="Notebook" style="width:200px;">
+  <div class="content">
+    <p>Surviv.io</p>
+  </div>
+</div></a>
+  </div>
+  <div class="row">
+  <div class="column">
+    <div class="container">
+  <a href="default.asp"><img src="/w3images/notebook.jpg" alt="Notebook" style="width:200px;">
+  <div class="content">
+    <p>Surviv.io</p>
+  </div>
+</div></a>
+  </div>
+</div>
+
+</body>
+</html>
