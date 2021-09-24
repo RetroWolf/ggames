@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+Name of the Game: <input type="text" id="field1"><br>
+Url for game in fullscreen: <input type="text" id="field3"><br><br>
+
+<button id="test" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;" onclick="myFunction()">Submit</button>
+<button id="myBtn" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;" onclick="myFunction()">Button</button>
+
+<script>
+var input = document.getElementById("field1");
+input.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+   event.preventDefault();
+   document.getElementById("myBtn").click();
+  }
+});
+var input = document.getElementById("field3");
+input.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+   event.preventDefault();
+   document.getElementById("myBtn").click();
+  }
+});
+</script>
+<script>
+function myFunction() {
+  document.getElementById("field2").value = document.getElementById("field1").value;
+  document.getElementById("field4").value = document.getElementById("field3").value;
+}
+</script>
+
+</body>
+<p>
+&lt!DOCTYPE html><br>
+&lthtml lang="en-us"><br>
+&lthead><br>
+  &ltlink rel="icon" href="https://retrowolf.github.io/ggames/GGamesLogo2test.png" type="image/png" sizes="16x16"><br>
+&lt/head><br>
+&lthead><br>
+&ltmeta charset="utf-8"><br>
+&ltmeta name="viewport" content="width=device-width, initial-scale=1" /><br>
+&ltmeta http-equiv="Content-Type" content="text/html; charset=utf-8"><br>
+&lttitle><input type="text" id="field2">&lt/title><br>
+&ltstyle><br>
+	html, body, iframe { width: 100%; height: 100%; margin: 0; padding: 0; }
+	&lt/style><br>
+&lt/head><br>
+&ltbody><br>
+&ltiframe src="<input type="text" id="field4">" frameborder="0" scrolling="no" allowfullscreen="true">&lt/iframe><br>
+&lt/body><br>
+&lt/html>
+</html>
